@@ -19,8 +19,8 @@ function List(){
 
     const UpdateDlts=(id,task) =>{
         setEditing(false)
-        axios.get(`http://127.0.0.1:8000/api/std/${id}/`,task).then (res=>{
-            setData(data.map((prv)=>prv.id==id ? res.data:prv))
+        axios.put(`http://127.0.0.1:8000/api/std/${id}/`,task).then (res=>{
+            setData(data.map((prv)=>prv.id===id ? res.data : prv))
         }).catch(error =>console.log(error.message)
     )
     }
@@ -51,13 +51,14 @@ function List(){
                     ))}
                 </tbody>
             </table>
-            {editing ? <EditForm curTask={editdata} updateFunction={UpdateDlts}/> : <Add/>}
+            {editing ? <EditForm curTask={editdata} updateFunction={UpdateDlts}/> : null}
         </div>
     )
 }
 
 const EditForm = ({curTask,updateFunction})=>{
     const [task,setTask] = useState(curTask)
+
     const handleChange = (e)=>{
         const {name,value}=e.target
         setTask({...task,[name]:value})
@@ -69,11 +70,11 @@ const EditForm = ({curTask,updateFunction})=>{
 
     return(
         <form onSubmit={handleSubmit}>
-            <input type="number" name="rollNo" id="rollNo" value={task.roll_no} onChange={handleChange}/>
+            <input type="number" name="roll_no" id="roll_no" value={task.roll_no} onChange={handleChange}/>
             <input type="text" name="name" id="name" value={task.name} onChange={handleChange}/>
             <input type="text" name="course" id="course" value={task.course} onChange={handleChange}/>
             <input type="email" name="email" id="email" value={task.email} onChange={handleChange}/>
-            <input type="submit" value="Submit" className="btn btn-primary"/>
+            <input type="submit" value="update" className="btn btn-primary"/>
         </form>
     )
 }
