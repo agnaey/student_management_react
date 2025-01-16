@@ -1,5 +1,6 @@
 import { useEffect,useState } from 'react'
 import axios from 'axios'
+import Add from "./Add"
 
 function List(){
     const [data,setData] = useState([])
@@ -24,6 +25,11 @@ function List(){
         }).catch(error =>console.log(error.message)
     )
     }
+    const Delete_dtls=(id) =>{
+        axios.delete(`http://127.0.0.1:8000/api/std/${id}/`).then(res=>{
+            setData(data.filter((task)=>task.id!=id))
+        }).catch(error=>console.log(error.message))
+    }
 
     return(
         <div className="container">
@@ -45,13 +51,13 @@ function List(){
                             <td>{value.course}</td>
                             <td>{value.email}</td>
                             <td><button className="btn btn-outline-info" onClick={()=>{Edit_dtls(value)}}>Edit</button></td>
-                            <td><button className="btn btn-outline-danger" onClick={()=>{}}>Delete</button></td>
+                            <td><button className="btn btn-outline-danger" onClick={()=>{Delete_dtls(value.id)}}>Delete</button></td>
 
                         </tr>
                     ))}
                 </tbody>
             </table>
-            {editing ? <EditForm curTask={editdata} updateFunction={UpdateDlts}/> : null}
+            {editing ? <EditForm curTask={editdata} updateFunction={UpdateDlts}/> : <Add/>}
         </div>
     )
 }
